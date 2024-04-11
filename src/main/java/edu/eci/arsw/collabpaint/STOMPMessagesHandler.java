@@ -6,6 +6,7 @@ import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
+import java.util.logging.Logger;
 
 import java.util.ArrayList;
 import java.util.Map;
@@ -14,6 +15,7 @@ import java.util.concurrent.ConcurrentHashMap;
 @Controller
 public class STOMPMessagesHandler {
 
+    Logger logger = Logger.getLogger(getClass().getName());
     private Map<String, ArrayList<Point>> points = new ConcurrentHashMap<>();
     SimpMessagingTemplate msgt;
 
