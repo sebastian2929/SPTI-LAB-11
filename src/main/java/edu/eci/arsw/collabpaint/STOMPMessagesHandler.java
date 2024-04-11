@@ -26,11 +26,11 @@ public class STOMPMessagesHandler {
 
     @MessageMapping("/newpoint.{numdibujo}")
     public void handlePointEvent(Point pt, @DestinationVariable String numdibujo) throws InvalidPointEventException {
-        System.out.println("Nuevo punto recibido en el servidor!:"+pt);
+        logger.info("Nuevo punto recibido en el servidor!:"+pt);
         msgt.convertAndSend("/topic/newpoint."+numdibujo, pt);
         if (points.get(numdibujo) != null){
             points.get(numdibujo).add(pt);
-            System.out.println(points.get(numdibujo).toString());
+            logger.info(points.get(numdibujo).toString());
             if (points.get(numdibujo).size() % 4 == 0){
                 msgt.convertAndSend("/topic/newpolygon." + numdibujo, points.get(numdibujo));
             }
