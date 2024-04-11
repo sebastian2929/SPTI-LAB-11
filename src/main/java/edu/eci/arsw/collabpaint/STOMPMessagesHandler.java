@@ -15,9 +15,12 @@ import java.util.concurrent.ConcurrentHashMap;
 public class STOMPMessagesHandler {
 
     private Map<String, ArrayList<Point>> points = new ConcurrentHashMap<>();
+    SimpMessagingTemplate msgt;
 
     @Autowired
-    SimpMessagingTemplate msgt;
+    public SimpMessagingTemplateService(SimpMessagingTemplate simpMessagingTemplate) {
+        this.msgt = simpMessagingTemplate;
+    }
 
     @MessageMapping("/newpoint.{numdibujo}")
     public void handlePointEvent(Point pt, @DestinationVariable String numdibujo) throws Exception {
