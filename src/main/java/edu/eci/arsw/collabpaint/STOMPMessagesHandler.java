@@ -6,7 +6,6 @@ import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
-import java.util.logging.Logger;
 
 import java.util.ArrayList;
 import java.util.Map;
@@ -15,7 +14,6 @@ import java.util.concurrent.ConcurrentHashMap;
 @Controller
 public class STOMPMessagesHandler {
 
-    Logger logger = Logger.getLogger(getClass().getName());
     private Map<String, ArrayList<Point>> points = new ConcurrentHashMap<>();
     SimpMessagingTemplate msgt;
 
@@ -26,11 +24,9 @@ public class STOMPMessagesHandler {
 
     @MessageMapping("/newpoint.{numdibujo}")
     public void handlePointEvent(Point pt, @DestinationVariable String numdibujo) throws InvalidPointEventException {
-        logger.info("Nuevo punto recibido en el servidor!:"+pt);
         msgt.convertAndSend("/topic/newpoint."+numdibujo, pt);
         if (points.get(numdibujo) != null){
             points.get(numdibujo).add(pt);
-            logger.info(points.get(numdibujo).toString());
             if (points.get(numdibujo).size() % 4 == 0){
                 msgt.convertAndSend("/topic/newpolygon." + numdibujo, points.get(numdibujo));
             }
