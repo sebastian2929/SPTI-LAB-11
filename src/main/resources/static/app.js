@@ -1,4 +1,4 @@
-var app = (function () {
+const app = (function () {
 
     class Point {
         constructor(x, y) {
