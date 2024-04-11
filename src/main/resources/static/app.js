@@ -18,58 +18,58 @@ const app = (function () {
         };
     }
 
-    var stompClient = null;
-    var mode = "Point"; // Variable global para almacenar el modo actual
+    let stompClient = null;
+    let mode = "Point"; // Variable global para almacenar el modo actual
 
-    var addPointToCanvas = function (point) {
-        var canvas = document.getElementById("canvas");
-        var ctx = canvas.getContext("2d");
+    const addPointToCanvas = function (point) {
+        const canvas = document.getElementById("canvas");
+        const ctx = canvas.getContext("2d");
         ctx.beginPath();
         ctx.arc(point.x, point.y, 3, 0, 2 * Math.PI);
         ctx.stroke();
     };
 
-    var getMousePosition = function (evt) {
-        var canvas = document.getElementById("canvas");
-        var rect = canvas.getBoundingClientRect();
+    const getMousePosition = function (evt) {
+        const canvas = document.getElementById("canvas");
+        const rect = canvas.getBoundingClientRect();
         return {
             x: evt.clientX - rect.left,
             y: evt.clientY - rect.top
         };
     };
 
-    var getRandomColor = function () {
+    const getRandomColor = function () {
         return '#' + Math.floor(Math.random() * 16777215).toString(16);
     };
 
-    var connectAndSubscribe = function (topic) {
+    const connectAndSubscribe = function (topic) {
         console.info('Connecting to WS...');
-        var socket = new SockJS('/stompendpoint');
+        const socket = new SockJS('/stompendpoint');
         stompClient = Stomp.over(socket);
 
         // Subscribe to /topic/TOPICXX when connections succeed
         stompClient.connect({}, function (frame) {
             console.log('Connected: ' + frame);
             stompClient.subscribe('/topic' + topic, function (eventbody) {
-                var pt = JSON.parse(eventbody.body);
+                const pt = JSON.parse(eventbody.body);
 
                 if (topic.includes("newpoint")) {
                     addPointToCanvas(pt);
                 } else {
-                    var color = getRandomColor();
-                    var sketch = new Sketch(pt, color);
+                    const color = getRandomColor();
+                    const sketch = new Sketch(pt, color);
                     drawNewSketch(sketch);
                 }
             });
         });
     };
 
-    var drawNewSketch = function (sketch) {
-        var canvas = document.getElementById('canvas');
-        var ctx = canvas.getContext('2d');
+    const drawNewSketch = function (sketch) {
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
         ctx.beginPath();
         ctx.fillStyle = sketch.color;
-        for (var i = 1; i < 5; i++) {
+        for (let i = 1; i < 5; i++) {
             if (i == 1) {
                 ctx.moveTo(sketch.points[sketch.points.length - i].x, sketch.points[sketch.points.length - i].y);
             } else {
@@ -82,11 +82,11 @@ const app = (function () {
 
     return {
         init: function () {
-            var canvas = document.getElementById("canvas");
+            const canvas = document.getElementById("canvas");
             if (window.PointerEvent) {
                 canvas.addEventListener("pointerdown", function (event) {
                     if (mode !== "Polygon") { // Verificar si el modo actual es "Polygon"
-                        var pt = getMousePosition(event);
+                        const pt = getMousePosition(event);
                         addPointToCanvas(pt);
                         stompClient.send("/app/newpoint", {}, JSON.stringify(pt));
                     }
@@ -97,7 +97,7 @@ const app = (function () {
         },
 
         publishPoint: function (px, py) {
-            var pt = new Point(px, py);
+            const pt = new Point(px, py);
             console.info("Publishing point at " + pt);
             addPointToCanvas(pt);
             stompClient.send("/topic/newpoint", {}, JSON.stringify(pt));
@@ -113,10 +113,10 @@ const app = (function () {
         },
 
         connect: function () {
-            var canvas = document.getElementById("canvas");
-            var option = document.getElementById("connectionType");
-            var drawId = $("#connectionId").val();
-            var topic = option.value + drawId;
+            const canvas = document.getElementById("canvas");
+            const option = document.getElementById("connectionType");
+            const drawId = $("#connectionId").val();
+            const topic = option.value + drawId;
 
             alert("Connected to: " + topic);
             connectAndSubscribe(topic);
@@ -124,7 +124,7 @@ const app = (function () {
             if (window.PointerEvent) {
                 canvas.addEventListener("pointerdown", function (event) {
                     if (mode !== "Polygon") { // Verificar si el modo actual es "Polygon"
-                        var pt = getMousePosition(event);
+                        const pt = getMousePosition(event);
                         addPointToCanvas(pt);
                         stompClient.send("/app" + topic, {}, JSON.stringify(pt));
                     }
