@@ -23,7 +23,7 @@ public class STOMPMessagesHandler {
     }
 
     @MessageMapping("/newpoint.{numdibujo}")
-    public void handlePointEvent(Point pt, @DestinationVariable String numdibujo) throws Exception {
+    public void handlePointEvent(Point pt, @DestinationVariable String numdibujo) throws InvalidPointEventException {
         System.out.println("Nuevo punto recibido en el servidor!:"+pt);
         msgt.convertAndSend("/topic/newpoint."+numdibujo, pt);
         if (points.get(numdibujo) != null){
@@ -36,6 +36,10 @@ public class STOMPMessagesHandler {
             ArrayList<Point> nuevo = new ArrayList<>();
             nuevo.add(pt);
             points.put(numdibujo, nuevo);
+        }
+        
+        if (pt == null || numdibujo == null || numdibujo.isEmpty()) {
+            throw new InvalidPointEventException("Invalid point event: Either point or numdibujo is null or empty.");
         }
     }
 }
