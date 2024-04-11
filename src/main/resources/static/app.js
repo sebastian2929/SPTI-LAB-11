@@ -1,17 +1,21 @@
 const app = (function () {
 
-    class Point {
-        constructor(x, y) {
-            this.x = x;
-            this.y = y;
-        }
+    function Point(x, y) {
+        const point = {
+            x: x,
+            y: y,
+            toString: function() {
+                return `Point(${this.x}, ${this.y})`;
+            }
+        };
+        return point;
     }
-
-    class Sketch {
-        constructor(points, color) {
-            this.points = points;
-            this.color = color;
-        }
+    
+    function Sketch(points, color) {
+        return {
+            points: points,
+            color: color
+        };
     }
 
     var stompClient = null;
