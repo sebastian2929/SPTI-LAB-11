@@ -18,7 +18,7 @@ public class STOMPMessagesHandler {
     SimpMessagingTemplate msgt;
 
     @Autowired
-    public SimpMessagingTemplateService(SimpMessagingTemplate simpMessagingTemplate) {
+    public void SimpMessagingTemplateService(SimpMessagingTemplate simpMessagingTemplate) {
         this.msgt = simpMessagingTemplate;
     }
 
